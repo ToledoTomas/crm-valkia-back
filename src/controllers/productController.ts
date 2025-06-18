@@ -3,27 +3,35 @@ import { Request, Response } from 'express';
 import * as productService from '../services/productServices';
 import { prisma } from '../config/prisma';
 
-export const getAllProducts = async (): Promise<Product[]> => {
-    const products = await prisma.product.findMany();
-    console.log(products);
-    return products;
-};
+export const getAllProductsHandler = async (req: Request, res: Response) => {
+    const products = await productService.getAllProducts();
+    try {
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(404).json({ message: 'No se pudo obtener los productos' });
+    }
+}
 
-export const getProductById = async (id: number): Promise<Product> => {
-    const product = await prisma.product.findUnique({
-        where: {
-            id,
-        },
-    });
-    return product;
-};
+export const getProductByIdHandler = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const product = await productService.getProductById(id);
+    try {
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(404).json({ message: 'Producto no encontrado' });
+    }
+}
 
-export const createProduct = async (product: Product): Promise<Product> => {
-    const newProduct = await prisma.product.create({
-        data: product,
-    });
-    return newProduct;
-};
+
+export const createProductHandler = async (req: Request, res: Response) => {
+    const product = req.body;
+    try {
+        const created = await productService.createProduct(product);
+        res.status(201).json(created);
+    } catch (error) {
+        res.status(400).json({ message: 'No se pudo crear el producto' });
+    }
+}
 
 
 export const updateProductHandler = async (req: Request, res: Response) => {
@@ -37,11 +45,14 @@ export const updateProductHandler = async (req: Request, res: Response) => {
       res.status(404).json({ message: 'Producto no encontrado' });
     }
   };
-export const deleteProduct = async (id: number): Promise<Product> => {
-    const deletedProduct = await prisma.product.delete({
-        where: {
-            id,
-        },
-    });
-    return deletedProduct;
-};
+
+
+export const deleteProductHandler = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    try {
+        const deleted = await productService.deleteProduct(id);
+        res.status(200).json(deleted);
+    } catch (error) {
+        res.status(404).json({ message: 'Producto no encontrado' });
+    }
+}

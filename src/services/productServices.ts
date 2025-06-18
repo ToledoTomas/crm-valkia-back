@@ -10,3 +10,29 @@ export const updateProduct = async (
     data: product,
   });
 };
+
+export const getAllProducts = async (): Promise<Product[]> => {
+  return await prisma.product.findMany();  
+}
+
+export const getProductById = async (id: number): Promise<Product> => {
+  return await prisma.product.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
+export const createProduct = async (product: Product): Promise<Product> => {
+  return await prisma.product.create({
+    data: product,
+  });
+}
+
+export const deleteProduct = async (id: number): Promise<Product> => {
+  return await prisma.product.delete({
+    where: {
+      id,
+    },
+  });
+};
