@@ -1,5 +1,5 @@
 import { prisma } from '../config/prisma';
-import { Product } from '../models/Product';
+import { Product } from '@prisma/client';
 
 export const updateProduct = async (
   id: number,
@@ -15,7 +15,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
   return await prisma.product.findMany();  
 }
 
-export const getProductById = async (id: number): Promise<Product> => {
+export const getProductById = async (id: number): Promise<Product | null> => {
   return await prisma.product.findUnique({
     where: {
       id,

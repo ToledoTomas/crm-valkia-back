@@ -1,7 +1,5 @@
-import { Product } from '../models/Product';
 import { Request, Response } from 'express';
 import * as productService from '../services/productServices';
-import { prisma } from '../config/prisma';
 
 export const getAllProductsHandler = async (req: Request, res: Response) => {
     const products = await productService.getAllProducts();
